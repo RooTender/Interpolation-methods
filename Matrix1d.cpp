@@ -22,6 +22,43 @@ void Matrix1d::fill(long double value)
 	}
 }
 
+Matrix1d Matrix1d::abs()
+{
+	Matrix1d M = Matrix1d(*this);
+	for (int i = 0; i < this->cols; ++i) {
+		M.matrix[i] = fabsl(M.matrix[i]);
+	}
+	
+	return Matrix1d(M);
+}
+
+Matrix1d Matrix1d::trunc(int from, int to)
+{
+	Matrix1d M = Matrix1d(to - from);
+	for (int i = from; i < to; ++i) {
+		M.matrix[i - from] = this->matrix[i];
+	}
+
+	return M;
+}
+
+/**
+ * Find maximum value in matrix and return index of it.
+ *
+ * @return index of maximum value in matrix.
+ */
+int Matrix1d::indexOf_max()
+{
+	int index = 0;
+	for (int i = 1; i < this->cols; ++i) {
+		if (this->matrix[i] > this->matrix[index]) {
+			index = i;
+		}
+	}
+
+	return index;
+}
+
 Matrix1d Matrix1d::operator=(const Matrix1d& M)
 {
 	for (int i = 0; i < this->size(); ++i) {

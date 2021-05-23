@@ -1,5 +1,6 @@
 #pragma once
 #include "Matrix.h"
+
 class Matrix1d : public Matrix
 {
 public:
@@ -9,6 +10,9 @@ public:
 	Matrix1d(const Matrix1d& M);
 
 	void fill(long double value) override;
+	int indexOf_max();
+	Matrix1d abs();
+	Matrix1d trunc(int from, int to);
 
 	Matrix1d operator= (const Matrix1d& M);
 	Matrix1d operator- (const Matrix1d& M) const;

@@ -29,7 +29,7 @@ void Matrix2d::fill(long double value)
 	}
 }
 
-bool Matrix2d::hasNullOnDiagonal()
+bool Matrix2d::hasNullOnDiagonal() const
 {
 	for (int i = 0; i < this->cols; ++i) {
 		if (matrix[i][i] == 0) {
@@ -66,6 +66,44 @@ Matrix2d Matrix2d::transpose()
 	}
 
 	return Matrix2d(trM);
+}
+
+Matrix1d Matrix2d::column(int index)
+{
+	Matrix1d M = Matrix1d(this->rows);
+	for (int i = 0; i < this->rows; ++i) {
+		M.matrix[i] = this->matrix[i][index];
+	}
+
+	return Matrix1d(M);
+}
+
+Matrix1d Matrix2d::row(int index)
+{
+	Matrix1d M = Matrix1d(this->cols);
+	for (int i = 0; i < this->cols; ++i) {
+		M.matrix[i] = this->matrix[index][i];
+	}
+
+	return Matrix1d(M);
+}
+
+void Matrix2d::swapColumns(int row1, int row2, int from, int to)
+{
+	for (int i = from; i < to; ++i) {
+		long double tmp = this->matrix[i][row1];
+		this->matrix[i][row1] = this->matrix[i][row2];
+		this->matrix[i][row2] = tmp;
+	}
+}
+
+void Matrix2d::swapRows(int col1, int col2, int from, int to)
+{
+	for (int i = from; i < to; ++i) {
+		long double tmp = this->matrix[col1][i];
+		this->matrix[col1][i] = this->matrix[col2][i];
+		this->matrix[col2][i] = tmp;
+	}
 }
 
 Matrix2d Matrix2d::operator=(const Matrix2d& M)

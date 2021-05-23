@@ -63,20 +63,46 @@ long double MatrixAlgs::gaussSeidl(const Matrix2d& A, Matrix1d& x, const Matrix1
     return (iterations < upperLimit) ? mNorm : 0;
 }
 
-long double MatrixAlgs::LUDecomposition(const Matrix2d& A, Matrix1d& x, const Matrix1d& b)
+long double MatrixAlgs::LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d b)
 {
     Matrix2d L = Matrix2d(A.toIdentity());
     Matrix2d U = Matrix2d(A);
 
+    if (A.hasNullOnDiagonal()) {
 
+        // Do the pivoting
+        Matrix2d P = Matrix2d(L);
 
-    // LU decomposition
-    for (int i = 0; i < A.rows - 1; ++i) {
-        for (int j = i + 1; j < A.cols; ++j) {
-            L.matrix[j][i] = U.matrix[j][i] / U.matrix[i][i];
-            
-            for (int k = i; k < A.cols; ++k) {
-                U.matrix[j][k] -= L.matrix[j][i] * U.matrix[i][k];
+        for (int i = 0; i < A.rows; ++i) {
+            auto pivotIndex = U.column(i).trunc(i, U.rows).abs().indexOf_max();
+            pivotIndex = pivotIndex + i;
+
+            U.swapRows(i, pivotIndex, i, U.cols);
+            L.swapRows(i, pivotIndex, 0, i - 1);
+            P.swapRows(i, pivotIndex, 0, P.cols);
+
+            // LU decomposition
+            for (int j = i + 1; j < A.cols; ++j) {
+                L.matrix[j][i] = U.matrix[j][i] / U.matrix[i][i];
+
+                for (int k = i; k < A.cols; ++k) {
+                    U.matrix[j][k] -= L.matrix[j][i] * U.matrix[i][k];
+                }
+            }
+        }
+
+        b = P * b;
+    }
+    else {
+
+        // LU decomposition
+        for (int i = 0; i < A.rows - 1; ++i) {
+            for (int j = i + 1; j < A.cols; ++j) {
+                L.matrix[j][i] = U.matrix[j][i] / U.matrix[i][i];
+
+                for (int k = i; k < A.cols; ++k) {
+                    U.matrix[j][k] -= L.matrix[j][i] * U.matrix[i][k];
+                }
             }
         }
     }
