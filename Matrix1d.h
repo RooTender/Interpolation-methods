@@ -8,8 +8,6 @@ public:
 	Matrix1d(int n);
 	Matrix1d(const Matrix1d& M);
 
-	template<typename func>
-	void generateValues(func function, int arg);
 	void fill(long double value) override;
 
 	Matrix1d operator= (const Matrix1d& M);
@@ -17,11 +15,3 @@ public:
 
 	~Matrix1d();
 };
-
-template<typename func>
-inline void Matrix1d::generateValues(func function, int arg)
-{
-	for (int i = 0; i < cols; i++) {
-		matrix[i] = function(i, arg);
-	}
-}

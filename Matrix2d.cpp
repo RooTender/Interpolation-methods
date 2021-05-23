@@ -29,30 +29,15 @@ void Matrix2d::fill(long double value)
 	}
 }
 
-void Matrix2d::generateValues(int a1, int a2, int a3)
+bool Matrix2d::hasNullOnDiagonal()
 {
-	for (int i = 0; i < rows; ++i) {
-		for (int j = 0; j < cols; ++j) {
-
-			switch (abs(i - j)) {
-			case 0:
-				matrix[i][j] = a1;
-				break;
-
-			case 1:
-				matrix[i][j] = a2;
-				break;
-
-			case 2:
-				matrix[i][j] = a3;
-				break;
-
-			default:
-				matrix[i][j] = 0;
-				break;
-			}
+	for (int i = 0; i < this->cols; ++i) {
+		if (matrix[i][i] == 0) {
+			return true;
 		}
 	}
+
+	return false;
 }
 
 Matrix2d Matrix2d::toIdentity() const

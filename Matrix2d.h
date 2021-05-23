@@ -12,7 +12,7 @@ public:
 
 	void fill(long double value) override;
 
-	void generateValues(int a1, int a2, int a3);
+	bool hasNullOnDiagonal();
 	Matrix2d toIdentity() const;
 	Matrix2d transpose();
 
