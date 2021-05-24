@@ -16,7 +16,7 @@ size_t Loader::load(Point*& points, std::string filename)
 	std::ifstream file;
 	file.open(filename.c_str());
 
-	auto i = 0;
+	size_t i = 0;
 	long double x, y;
 	while (file >> x >> y && i < lines) {
 		points[i++] = Point(x, y);
