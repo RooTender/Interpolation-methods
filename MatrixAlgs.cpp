@@ -194,5 +194,14 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount)
         }
     }
 
-    return Matrix1d(0);
+    Matrix1d result = Matrix1d(pointsCount);
+    result.fill(0);
+
+    for (size_t i = 0; i < pointsCount; ++i) {
+        for (size_t j = 0; j < lagrangeBase[i]->size(); ++j) {
+            result.matrix[j] += lagrangeBase[i]->matrix[j] * points[i].y;
+        }
+    }
+
+    return Matrix1d(result);
 }
