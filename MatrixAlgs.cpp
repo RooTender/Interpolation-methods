@@ -177,12 +177,13 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(const PointArray& points)
             }
 
             for (size_t k = 0; k < (*polynomial).size(); ++k) {
-                (*polynomial).matrix[k] /= (points.arr[i].x - points.arr[j].x);
+                (*polynomial).matrix[k] /= points.arr[i].x - points.arr[j].x;
             }
         }
 
         if (polynomial != nullptr) {
             lagrangeBase[i] = new Matrix1d(*polynomial);
+
             delete polynomial;
         }
     }

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <iomanip>
 #include "PointArray.h"
 #include "Matrix1d.h"
 

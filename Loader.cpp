@@ -96,24 +96,26 @@ void Loader::unload(const Matrix1d& matrix, const PointArray& pointArray, std::s
 		ofs.close();
 	}
 
+	// Output points
 	std::ofstream ofs;
-	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_function.txt",
-		std::ofstream::out
-	);
-	
-	for (size_t i = 0; i < matrix.size(); ++i) {
-		ofs << matrix.matrix[i] << '\n';
-	}
-	ofs.close();
-
 	ofs.open(
 		this->outputDirectory + "//" + getRawFilename(filename) + "_points.txt",
 		std::ofstream::out
 	);
 
 	for (size_t i = 0; i < pointArray.getLength(); ++i) {
-		ofs << pointArray.arr[i].x << ' ' << pointArray.arr[i].y << '\n';
+		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed << pointArray.arr[i].x << ' ' << pointArray.arr[i].y << '\n';
+	}
+	ofs.close();
+
+	// Output Lagrange interpolation
+	ofs.open(
+		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange.txt",
+		std::ofstream::out
+	);
+	
+	for (size_t i = 0; i < matrix.size(); ++i) {
+		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific << matrix.matrix[i] << '\n';
 	}
 	ofs.close();
 }
