@@ -10,21 +10,32 @@ std::string Loader::getFilename(std::string path)
 	return path;
 }
 
-Loader::Loader(std::string directory) {
-	this->directory = directory;
+std::string Loader::getRawFilename(std::string filename)
+{
+	auto lastindex = filename.find_last_of(".");
 
-	for (const auto& file : std::filesystem::directory_iterator(directory)) {
+	if (lastindex != filename.npos) {
+		return filename.substr(0, lastindex);
+	}
+	return filename;
+}
+
+Loader::Loader(std::string inputDirectory, std::string outputDirectory) {
+	this->inputDirectory = inputDirectory;
+	this->outputDirectory = outputDirectory;
+
+	for (const auto& file : std::filesystem::directory_iterator(inputDirectory)) {
 		this->paths.push_back(this->getFilename(file.path().u8string()));
 	}
 }
 
-size_t Loader::load(Point*& points, std::string filename)
+PointArray Loader::load(std::string filename)
 {
-	auto path = this->directory + "\\" + filename;
+	auto path = this->inputDirectory + "\\" + filename;
 	auto fileContents = std::ifstream(path);
 	auto lines = (size_t)std::count(std::istreambuf_iterator<char>(fileContents), std::istreambuf_iterator<char>(), '\n');
 
-	points = new Point[lines];
+	PointArray points = PointArray(lines);
 
 	std::ifstream file;
 	file.open(path.c_str());
@@ -32,12 +43,12 @@ size_t Loader::load(Point*& points, std::string filename)
 	size_t i = 0;
 	long double x, y;
 	while (file >> x >> y && i < lines) {
-		points[i++] = Point(x, y);
+		points.arr[i++] = Point(x, y);
 	}
 
 	file.close();
 
-	return lines;
+	return PointArray(points);
 }
 
 std::vector<std::string> Loader::getPaths()
@@ -45,24 +56,64 @@ std::vector<std::string> Loader::getPaths()
 	return paths;
 }
 
-void Loader::unload(const Matrix1d& matrix, std::string directory, std::string filename)
+void Loader::unload(const Matrix1d& matrix, const PointArray& pointArray, std::string filename)
 {
-	if (!std::filesystem::is_directory(directory)) {
-		std::filesystem::create_directory(directory);
+	if (!std::filesystem::is_directory(this->outputDirectory)) {
+		std::filesystem::create_directory(this->outputDirectory);
 	}
 
-	std::string path = directory + "//" + filename;
+	std::string path = this->outputDirectory + "//" + filename;
 	if (std::filesystem::exists(path)) {
 		std::filesystem::remove(path);
 	}
 
+	path = this->outputDirectory + "//available.txt";
+	if (!std::filesystem::exists(path)) {
+		std::ofstream ofs(path);
+		ofs.close();
+	}
+
+	const std::string rawFilename = getRawFilename(filename);
+
+	std::ifstream ifs;
+	ifs.open(path);
+
+	bool dataExistsInFile = false;
+	std::string line;
+	
+	while (ifs >> line) {
+		if (line == rawFilename) {
+			dataExistsInFile = true;
+			break;
+		}
+	}
+	ifs.close();
+
+	if (!dataExistsInFile) {
+		std::ofstream ofs;
+		ofs.open(path, std::ofstream::app);
+		ofs << rawFilename << '\n';
+		ofs.close();
+	}
+
 	std::ofstream ofs;
-	ofs.open(path, std::ofstream::out);
+	ofs.open(
+		this->outputDirectory + "//" + getRawFilename(filename) + "_function.txt",
+		std::ofstream::out
+	);
 	
 	for (size_t i = 0; i < matrix.size(); ++i) {
 		ofs << matrix.matrix[i] << '\n';
 	}
+	ofs.close();
 
+	ofs.open(
+		this->outputDirectory + "//" + getRawFilename(filename) + "_points.txt",
+		std::ofstream::out
+	);
+
+	for (size_t i = 0; i < pointArray.getLength(); ++i) {
+		ofs << pointArray.arr[i].x << ' ' << pointArray.arr[i].y << '\n';
+	}
 	ofs.close();
 }
-

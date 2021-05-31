@@ -4,15 +4,14 @@
 
 
 int main() {
-	Loader loader = Loader("input");
-	
-	Point* points;
-	size_t pointsCount;
+	Loader loader = Loader("input", "output");
+	PointArray points = loader.load(loader.getPaths()[0]);
 
-	pointsCount = loader.load(points, loader.getPaths()[0]);
-	Matrix1d matrix = MatrixAlgs::lagrangeInterpolation(points, pointsCount);
+	// Truncated array for optimal results (avoiding factors underflows)
+	PointArray lagrangePoints = points.trunc(0, 20);
 
-	loader.unload(matrix, "out", loader.getPaths()[0]);
+	Matrix1d matrix = MatrixAlgs::lagrangeInterpolation(lagrangePoints);
+	loader.unload(matrix, lagrangePoints, loader.getPaths()[0]);
 
 	return 0;
 }

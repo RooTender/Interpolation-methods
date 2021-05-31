@@ -2,7 +2,7 @@
 #include <math.h>
 #include "Matrix2d.h"
 #include "Matrix1d.h"
-#include "Point.h"
+#include "PointArray.h"
 
 namespace MatrixAlgs
 {
@@ -11,6 +11,6 @@ namespace MatrixAlgs
 	long double gaussSeidl(const Matrix2d& A, Matrix1d& x, const Matrix1d& b, long double limit, int& iterations);
 	long double LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d b);
 	Matrix1d multiplyPolynomials(const Matrix1d& A, const Matrix1d& B);
-	Matrix1d lagrangeInterpolation(Point*& points, size_t pointsCount, size_t limit = 24);
+	Matrix1d lagrangeInterpolation(const PointArray& points);
 };
 

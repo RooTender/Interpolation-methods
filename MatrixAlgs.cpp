@@ -152,26 +152,19 @@ Matrix1d MatrixAlgs::multiplyPolynomials(const Matrix1d& A, const Matrix1d& B)
     return Matrix1d(M);
 }
 
-Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount, size_t limit)
+Matrix1d MatrixAlgs::lagrangeInterpolation(const PointArray& points)
 {
-    Matrix1d** lagrangeBase = new Matrix1d*[pointsCount];
-    long double arr[2] = { 0 };
+    Matrix1d** lagrangeBase = new Matrix1d*[points.getLength()];
 
-    if (pointsCount > limit) {
-        pointsCount = limit;
-    }
-
-    for (size_t i = 0; i < pointsCount; ++i) {
+    for (size_t i = 0; i < points.getLength(); ++i) {
         Matrix1d *polynomial = nullptr;
 
-        for (size_t j = 0; j < pointsCount; ++j) {
+        for (size_t j = 0; j < points.getLength(); ++j) {
             if (i == j) {
                 continue;
             }
 
-            arr[0] = 1.0l;
-            arr[1] = -points[j].x;
-
+            long double arr[2] = { 1.0l, -points.arr[j].x };
             if (polynomial == nullptr) {
                 polynomial = new Matrix1d(2);
                 (*polynomial).matrix[0] = arr[0];
@@ -184,7 +177,7 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount, s
             }
 
             for (size_t k = 0; k < (*polynomial).size(); ++k) {
-                (*polynomial).matrix[k] /= (points[i].x - points[j].x);
+                (*polynomial).matrix[k] /= (points.arr[i].x - points.arr[j].x);
             }
         }
 
@@ -194,12 +187,12 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount, s
         }
     }
 
-    Matrix1d result = Matrix1d(pointsCount);
+    Matrix1d result = Matrix1d(points.getLength());
     result.fill(0);
 
-    for (size_t i = 0; i < pointsCount; ++i) {
+    for (size_t i = 0; i < points.getLength(); ++i) {
         for (size_t j = 0; j < lagrangeBase[i]->size(); ++j) {
-            result.matrix[j] += lagrangeBase[i]->matrix[j] * points[i].y;
+            result.matrix[j] += lagrangeBase[i]->matrix[j] * points.arr[i].y;
         }
     }
 
