@@ -152,15 +152,17 @@ Matrix1d MatrixAlgs::multiplyPolynomials(const Matrix1d& A, const Matrix1d& B)
     return Matrix1d(M);
 }
 
-Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount)
+Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount, size_t limit)
 {
     Matrix1d** lagrangeBase = new Matrix1d*[pointsCount];
     long double arr[2] = { 0 };
 
-    for (size_t i = 0; i < pointsCount; ++i) {
+    if (pointsCount > limit) {
+        pointsCount = limit;
+    }
 
+    for (size_t i = 0; i < pointsCount; ++i) {
         Matrix1d *polynomial = nullptr;
-        long double denominator = 1;
 
         for (size_t j = 0; j < pointsCount; ++j) {
             if (i == j) {
@@ -181,15 +183,13 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(Point*& points, size_t pointsCount)
                 );
             }
 
-            denominator *= (points[i].x - points[j].x);
+            for (size_t k = 0; k < (*polynomial).size(); ++k) {
+                (*polynomial).matrix[k] /= (points[i].x - points[j].x);
+            }
         }
 
         if (polynomial != nullptr) {
-            for (size_t j = 0; j < pointsCount; ++j) {
-                (*polynomial).matrix[j] /= denominator;
-            }
             lagrangeBase[i] = new Matrix1d(*polynomial);
-
             delete polynomial;
         }
     }

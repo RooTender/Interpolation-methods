@@ -12,3 +12,5 @@ Debug/vc142.pdb
 *.ilk
 *.idb
 Debug/Projekt3_MN.vcxproj.FileListAbsolute.txt
+Chart Generator/venv
+Chart Generator/.idea
