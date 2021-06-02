@@ -236,7 +236,9 @@ void MatrixAlgs::splineInterpolation(const PointArray& points, Matrix1d**& splin
         y.matrix[2] = points.arr[i + 1].y;
         y.matrix[3] = points.arr[i + 2].y;
 
-        splines[i] = new Matrix1d(8);
-        LUDecomposition(M, *splines[i], y);
+        Matrix1d x = Matrix1d(8);
+        LUDecomposition(M, x, y);
+
+        splines[i] = new Matrix1d(x);
     }
 }

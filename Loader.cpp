@@ -20,6 +20,47 @@ std::string Loader::getRawFilename(std::string filename)
 	return filename;
 }
 
+void Loader::updateFunctionsDatabase(const std::string filename)
+{
+	if (!std::filesystem::is_directory(this->outputDirectory)) {
+		std::filesystem::create_directory(this->outputDirectory);
+	}
+
+	std::string path = this->outputDirectory + "//" + filename;
+	if (std::filesystem::exists(path)) {
+		std::filesystem::remove(path);
+	}
+
+	path = this->outputDirectory + "//available.txt";
+	if (!std::filesystem::exists(path)) {
+		std::ofstream ofs(path);
+		ofs.close();
+	}
+
+	const std::string rawFilename = getRawFilename(filename);
+
+	std::ifstream ifs;
+	ifs.open(path);
+
+	bool dataExistsInFile = false;
+	std::string line;
+
+	while (ifs >> line) {
+		if (line == rawFilename) {
+			dataExistsInFile = true;
+			break;
+		}
+	}
+	ifs.close();
+
+	if (!dataExistsInFile) {
+		std::ofstream ofs;
+		ofs.open(path, std::ofstream::app);
+		ofs << rawFilename << '\n';
+		ofs.close();
+	}
+}
+
 Loader::Loader(std::string inputDirectory, std::string outputDirectory) {
 	this->inputDirectory = inputDirectory;
 	this->outputDirectory = outputDirectory;
@@ -56,66 +97,64 @@ std::vector<std::string> Loader::getPaths()
 	return paths;
 }
 
-void Loader::unload(const Matrix1d& matrix, const PointArray& pointArray, std::string filename)
+void Loader::unload(const Matrix1d& lagrangeFactors,
+					const PointArray& lagrangePoints,
+					Matrix1d**& splines,
+					const PointArray& splinePoints,
+					const std::string filename)
 {
-	if (!std::filesystem::is_directory(this->outputDirectory)) {
-		std::filesystem::create_directory(this->outputDirectory);
-	}
+	this->updateFunctionsDatabase(filename);
 
-	std::string path = this->outputDirectory + "//" + filename;
-	if (std::filesystem::exists(path)) {
-		std::filesystem::remove(path);
-	}
-
-	path = this->outputDirectory + "//available.txt";
-	if (!std::filesystem::exists(path)) {
-		std::ofstream ofs(path);
-		ofs.close();
-	}
-
-	const std::string rawFilename = getRawFilename(filename);
-
-	std::ifstream ifs;
-	ifs.open(path);
-
-	bool dataExistsInFile = false;
-	std::string line;
-	
-	while (ifs >> line) {
-		if (line == rawFilename) {
-			dataExistsInFile = true;
-			break;
-		}
-	}
-	ifs.close();
-
-	if (!dataExistsInFile) {
-		std::ofstream ofs;
-		ofs.open(path, std::ofstream::app);
-		ofs << rawFilename << '\n';
-		ofs.close();
-	}
-
-	// Output points
+	// Lagrange points
 	std::ofstream ofs;
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_points.txt",
+		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange_points.txt",
 		std::ofstream::out
 	);
 
-	for (int i = 0; i < pointArray.getLength(); ++i) {
-		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed << pointArray.arr[i].x << ' ' << pointArray.arr[i].y << '\n';
+	for (int i = 0; i < lagrangePoints.getLength(); ++i) {
+		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed
+			<< lagrangePoints.arr[i].x << ' ' << lagrangePoints.arr[i].y << '\n';
 	}
 	ofs.close();
 
-	// Output Lagrange interpolation
+	// Lagrange interpolation
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange.txt",
+		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange_factors.txt",
 		std::ofstream::out
 	);
 	
-	for (int i = 0; i < matrix.size(); ++i) {
-		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific << matrix.matrix[i] << '\n';
+	for (int i = 0; i < lagrangeFactors.size(); ++i) {
+		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific
+			<< lagrangeFactors.matrix[i] << '\n';
+	}
+	ofs.close();
+
+
+	// Spline points
+	ofs.open(
+		this->outputDirectory + "//" + getRawFilename(filename) + "_spline_points.txt",
+		std::ofstream::out
+	);
+
+	for (int i = 0; i < splinePoints.getLength(); ++i) {
+		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed
+			<< splinePoints.arr[i].x << ' ' << splinePoints.arr[i].y << '\n';
+	}
+	ofs.close();
+
+	// Spline interpolation
+	ofs.open(
+		this->outputDirectory + "//" + getRawFilename(filename) + "_spline_factors.txt",
+		std::ofstream::out
+	);
+
+	for (int i = 0; i < splinePoints.getLength() - 2; ++i) {
+		for (int j = 0; j < splines[i]->size(); ++j) {
+			ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific
+				<< splines[i]->matrix[j] << '\n';
+		}
+		ofs << ";\n";
 	}
 	ofs.close();
 }

@@ -14,10 +14,10 @@ int main() {
 	Matrix1d** splines = nullptr;
 	MatrixAlgs::splineInterpolation(points, splines);
 
-	loader.unload(matrix, lagrangePoints, loader.getPaths()[0]);
+	loader.unload(matrix, lagrangePoints, splines, points, loader.getPaths()[0]);
 
 	for (int i = 0; i < points.getLength() - 2; ++i) {
-		delete[] splines[i];
+		delete splines[i];
 	}
 	delete[] splines;
 

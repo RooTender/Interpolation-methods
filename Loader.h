@@ -16,11 +16,17 @@ private:
 	std::string getFilename(std::string path);
 	std::string getRawFilename(std::string filename);
 
+	void updateFunctionsDatabase(const std::string filename);
+
 public:
 	Loader(std::string inputDirectory, std::string outputDirectory);
 
 	PointArray load(std::string filename);
 	std::vector<std::string> getPaths();
-	void unload(const Matrix1d& matrix, const PointArray& pointArray, const std::string filename);
+	void unload(const Matrix1d& lagrangeFactors, 
+				const PointArray& lagrangePoints, 
+				Matrix1d**& splines, 
+				const PointArray& splinePoints,
+				const std::string filename);
 };
 
