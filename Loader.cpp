@@ -26,38 +26,11 @@ void Loader::updateFunctionsDatabase(const std::string filename)
 		std::filesystem::create_directory(this->outputDirectory);
 	}
 
-	std::string path = this->outputDirectory + "//" + filename;
-	if (std::filesystem::exists(path)) {
-		std::filesystem::remove(path);
-	}
-
-	path = this->outputDirectory + "//available.txt";
-	if (!std::filesystem::exists(path)) {
-		std::ofstream ofs(path);
-		ofs.close();
-	}
-
-	const std::string rawFilename = getRawFilename(filename);
-
-	std::ifstream ifs;
-	ifs.open(path);
-
-	bool dataExistsInFile = false;
-	std::string line;
-
-	while (ifs >> line) {
-		if (line == rawFilename) {
-			dataExistsInFile = true;
-			break;
-		}
-	}
-	ifs.close();
-
-	if (!dataExistsInFile) {
-		std::ofstream ofs;
-		ofs.open(path, std::ofstream::app);
-		ofs << rawFilename << '\n';
-		ofs.close();
+	const std::string functionFolder = this->outputDirectory + "//" + getRawFilename(filename);
+	std::filesystem::remove_all(functionFolder);
+	
+	if (!std::filesystem::is_directory(functionFolder)) {
+		std::filesystem::create_directory(functionFolder);
 	}
 }
 
@@ -105,10 +78,12 @@ void Loader::unload(const Matrix1d& lagrangeFactors,
 {
 	this->updateFunctionsDatabase(filename);
 
+	const std::string functionFolder = this->outputDirectory + "//" + getRawFilename(filename);
+
 	// Lagrange points
 	std::ofstream ofs;
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange_points.txt",
+		functionFolder + "//lagrange_points.txt",
 		std::ofstream::out
 	);
 
@@ -120,7 +95,7 @@ void Loader::unload(const Matrix1d& lagrangeFactors,
 
 	// Lagrange interpolation
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_lagrange_factors.txt",
+		functionFolder + "//lagrange_factors.txt",
 		std::ofstream::out
 	);
 	
@@ -133,7 +108,7 @@ void Loader::unload(const Matrix1d& lagrangeFactors,
 
 	// Spline points
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_spline_points.txt",
+		functionFolder + "//spline_points.txt",
 		std::ofstream::out
 	);
 
@@ -145,7 +120,7 @@ void Loader::unload(const Matrix1d& lagrangeFactors,
 
 	// Spline interpolation
 	ofs.open(
-		this->outputDirectory + "//" + getRawFilename(filename) + "_spline_factors.txt",
+		functionFolder + "//spline_factors.txt",
 		std::ofstream::out
 	);
 
