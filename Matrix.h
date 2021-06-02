@@ -7,11 +7,11 @@ protected:
 	Matrix() {};
 
 public:
-	size_t rows = 0;
-	size_t cols = 0;
+	int rows = 0;
+	int cols = 0;
 
-	virtual size_t size();
-	virtual size_t size() const;
+	virtual int size();
+	virtual int size() const;
 	virtual void fill(long double value) = 0;
 };
 

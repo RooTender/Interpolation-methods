@@ -2,7 +2,7 @@
 
 std::string Loader::getFilename(std::string path)
 {
-	const size_t lastSlashIndex = path.find_last_of("\\/");
+	const int lastSlashIndex = path.find_last_of("\\/");
 	if (std::string::npos != lastSlashIndex) {
 		path.erase(0, lastSlashIndex + 1);
 	}
@@ -33,14 +33,14 @@ PointArray Loader::load(std::string filename)
 {
 	auto path = this->inputDirectory + "\\" + filename;
 	auto fileContents = std::ifstream(path);
-	auto lines = (size_t)std::count(std::istreambuf_iterator<char>(fileContents), std::istreambuf_iterator<char>(), '\n');
+	auto lines = (int)std::count(std::istreambuf_iterator<char>(fileContents), std::istreambuf_iterator<char>(), '\n');
 
 	PointArray points = PointArray(lines);
 
 	std::ifstream file;
 	file.open(path.c_str());
 
-	size_t i = 0;
+	int i = 0;
 	long double x, y;
 	while (file >> x >> y && i < lines) {
 		points.arr[i++] = Point(x, y);
@@ -103,7 +103,7 @@ void Loader::unload(const Matrix1d& matrix, const PointArray& pointArray, std::s
 		std::ofstream::out
 	);
 
-	for (size_t i = 0; i < pointArray.getLength(); ++i) {
+	for (int i = 0; i < pointArray.getLength(); ++i) {
 		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed << pointArray.arr[i].x << ' ' << pointArray.arr[i].y << '\n';
 	}
 	ofs.close();
@@ -114,7 +114,7 @@ void Loader::unload(const Matrix1d& matrix, const PointArray& pointArray, std::s
 		std::ofstream::out
 	);
 	
-	for (size_t i = 0; i < matrix.size(); ++i) {
+	for (int i = 0; i < matrix.size(); ++i) {
 		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific << matrix.matrix[i] << '\n';
 	}
 	ofs.close();

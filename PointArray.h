@@ -4,16 +4,16 @@
 class PointArray
 {
 private:
-	size_t length;
+	int length;
 
 public:
 	Point* arr;
 
-	PointArray(size_t n);
+	PointArray(int n);
 	PointArray(const PointArray& pointArray);
 	
-	size_t getLength() const;
-	PointArray trunc(size_t begin, size_t end);
+	int getLength() const;
+	PointArray trunc(int begin, int end);
 
 	~PointArray();
 };

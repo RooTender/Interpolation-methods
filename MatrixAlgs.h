@@ -12,5 +12,6 @@ namespace MatrixAlgs
 	long double LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d b);
 	Matrix1d multiplyPolynomials(const Matrix1d& A, const Matrix1d& B);
 	Matrix1d lagrangeInterpolation(const PointArray& points);
+	void splineInterpolation(const PointArray& points, Matrix1d**& splines);
 };
 
