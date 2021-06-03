@@ -15,3 +15,4 @@ Debug/Projekt3_MN.vcxproj.FileListAbsolute.txt
 Chart Generator/venv
 Chart Generator/.idea
 output
+Chart Generator/IOHandler/__pycache__
