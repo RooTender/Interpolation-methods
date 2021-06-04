@@ -70,66 +70,32 @@ std::vector<std::string> Loader::getPaths()
 	return paths;
 }
 
-void Loader::unload(const Matrix1d& lagrangeFactors,
-					const PointArray& lagrangePoints,
-					Matrix1d**& splines,
-					const PointArray& splinePoints,
-					const std::string filename)
+void Loader::unload(const PointArray& points, const Matrix1d& factors, const std::string prefix, const std::string filename)
 {
-	this->updateFunctionsDatabase(filename);
-
 	const std::string functionFolder = this->outputDirectory + "//" + getRawFilename(filename);
 
 	// Lagrange points
 	std::ofstream ofs;
 	ofs.open(
-		functionFolder + "//lagrange_points.txt",
+		functionFolder + "//" + prefix + "_points.txt",
 		std::ofstream::out
 	);
 
-	for (int i = 0; i < lagrangePoints.getLength(); ++i) {
+	for (int i = 0; i < points.getLength(); ++i) {
 		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed
-			<< lagrangePoints.arr[i].x << ' ' << lagrangePoints.arr[i].y << '\n';
+			<< points.arr[i].x << ' ' << points.arr[i].y << '\n';
 	}
 	ofs.close();
 
 	// Lagrange interpolation
 	ofs.open(
-		functionFolder + "//lagrange_factors.txt",
+		functionFolder + "//" + prefix + "_factors.txt",
 		std::ofstream::out
 	);
 	
-	for (int i = 0; i < lagrangeFactors.size(); ++i) {
+	for (int i = 0; i < factors.size(); ++i) {
 		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific
-			<< lagrangeFactors.matrix[i] << '\n';
-	}
-	ofs.close();
-
-
-	// Spline points
-	ofs.open(
-		functionFolder + "//spline_points.txt",
-		std::ofstream::out
-	);
-
-	for (int i = 0; i < splinePoints.getLength(); ++i) {
-		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::fixed
-			<< splinePoints.arr[i].x << ' ' << splinePoints.arr[i].y << '\n';
-	}
-	ofs.close();
-
-	// Spline interpolation
-	ofs.open(
-		functionFolder + "//spline_factors.txt",
-		std::ofstream::out
-	);
-
-	for (int i = 0; i < splinePoints.getLength() - 2; ++i) {
-		for (int j = 0; j < splines[i]->size(); ++j) {
-			ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific
-				<< splines[i]->matrix[j] << '\n';
-		}
-		ofs << ";\n";
+			<< factors.matrix[i] << '\n';
 	}
 	ofs.close();
 }

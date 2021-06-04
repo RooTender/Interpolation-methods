@@ -32,3 +32,17 @@ PointArray PointArray::trunc(int begin, int end)
 
 	return truncatedArray;
 }
+
+PointArray PointArray::removeMidpoints(int amount)
+{
+	++amount;
+	PointArray noMidpoints = PointArray(this->length / amount + 1);
+
+	int iterator = 0;
+	for (int i = 0; i <= this->length / 2; i += amount) {
+		noMidpoints.arr[iterator] = this->arr[i];
+		noMidpoints.arr[noMidpoints.getLength() - 1 - iterator++] = this->arr[this->length - 1 - i];
+	}
+
+	return noMidpoints;
+}

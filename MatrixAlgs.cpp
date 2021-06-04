@@ -200,45 +200,51 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(const PointArray& points)
     return Matrix1d(result);
 }
 
-void MatrixAlgs::splineInterpolation(const PointArray& points, Matrix1d**& splines)
+Matrix1d MatrixAlgs::splineInterpolation(const PointArray& points)
 {
-    Matrix2d M = Matrix2d(8);
+    Matrix2d M = Matrix2d((points.getLength() - 1) * 4);
+    Matrix1d x = Matrix1d(M.rows);
+    Matrix1d y = Matrix1d(M.rows);
+
     M.fill(0);
-
-    // hardcoded matrix2d
-    M.matrix[0][0] =  1.0l;  // { 1, 0, 0, 0, 0, 0, 0, 0 }
-    M.matrix[1][4] =  1.0l;  // { 0, 0, 0, 0, 1, 0, 0, 0 }
-    M.matrix[2][0] =  1.0l;  // { 1, x, x, x, 0, 0, 0, 0 }
-    M.matrix[3][4] =  1.0l;  // { 0, 0, 0, 0, 1, x, x, x }
-    M.matrix[4][1] =  1.0l;  // { 0, 1, x, x, 0,-1, 0, 0 }
-    M.matrix[4][5] = -1.0l;
-    M.matrix[5][2] =  2.0l;  // { 0, 0, 2, x, 0, 0,-2, 0 }
-    M.matrix[5][6] = -2.0l;
-    M.matrix[6][2] =  1.0l;  // { 0, 0, 1, 0, 0, 0, 0, 0 }
-    M.matrix[7][6] =  2.0l;  // { 0, 0, 1, 0, 0, 0, 2, x }
-
-    Matrix1d y = Matrix1d(8);
     y.fill(0);
 
-    splines = new Matrix1d* [points.getLength() - 2];
-    for (int i = 0; i < points.getLength() - 2; ++i) {
-        auto h = points.arr[i + 1].x - points.arr[i].x;
+    auto shift = points.getLength() - 1;
+    for (int i = 0; i < points.getLength() - 1; ++i) {
+        M.matrix[i][i * 4] = 1.0l;
 
-        M.matrix[2][1] = M.matrix[3][5] = h;
-        M.matrix[2][2] = M.matrix[3][6] = h * h;
-        M.matrix[2][3] = M.matrix[3][7] = h * h * h;
-        M.matrix[4][2] = 2.0l * h;
-        M.matrix[4][3] = 3.0l * h * h;
-        M.matrix[5][3] = M.matrix[7][7] = 6.0l * h;
+        const auto h = points.arr[i + 1].x - points.arr[i].x;
+        M.matrix[i + shift][i * 4] = 1.0l;
+        M.matrix[i + shift][i * 4 + 1] = h;
+        M.matrix[i + shift][i * 4 + 2] = h * h;
+        M.matrix[i + shift][i * 4 + 3] = h * h * h;
 
-        y.matrix[0] = points.arr[i].y;
-        y.matrix[1] = points.arr[i + 1].y;
-        y.matrix[2] = points.arr[i + 1].y;
-        y.matrix[3] = points.arr[i + 2].y;
-
-        Matrix1d x = Matrix1d(8);
-        LUDecomposition(M, x, y);
-
-        splines[i] = new Matrix1d(x);
+        y.matrix[i] = points.arr[i].y;
+        y.matrix[i + shift] = points.arr[i + 1].y;
     }
+
+    shift *= 2;
+    for (int i = 0; i < points.getLength() - 2; ++i) {
+        const auto row = i * 2 + shift;
+        
+        const auto h = points.arr[i + 1].x - points.arr[i].x;
+        M.matrix[row][i * 4 + 1] = 1.0l;
+        M.matrix[row][i * 4 + 2] = 2.0l * h;
+        M.matrix[row][i * 4 + 3] = 3.0l * h * h;
+        M.matrix[row][i * 4 + 5] = -1.0l;
+
+        M.matrix[row + 1][i * 4 + 2] = 2.0l;
+        M.matrix[row + 1][i * 4 + 3] = 6.0l * h;
+        M.matrix[row + 1][i * 4 + 6] = -2.0l;
+    }
+
+    const auto h = points.arr[points.getLength() - 2].x - points.arr[points.getLength() - 1].x;
+    shift = (points.getLength() - 1) * 4 - 2;
+    M.matrix[shift][2] = 2.0l;
+    M.matrix[shift + 1][shift] = 2.0l;
+    M.matrix[shift + 1][shift + 1] = 6.0l * h;
+
+    LUDecomposition(M, x, y);
+
+    return Matrix1d(x);
 }

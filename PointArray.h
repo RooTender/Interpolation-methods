@@ -14,6 +14,7 @@ public:
 	
 	int getLength() const;
 	PointArray trunc(int begin, int end);
+	PointArray removeMidpoints(int amount);
 
 	~PointArray();
 };

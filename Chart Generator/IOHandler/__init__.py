@@ -37,17 +37,15 @@ class IOHandler:
 
         return files[int(position)]
 
-    # def add_midpoints(self, given_points):
-    #     result = copy.deepcopy(given_points)
-    #     midpoints = []
-    #
-    #     for i in range(1, len(given_points)):
-    #         midpoints.append((given_points[i - 1] + given_points[i]) / 2)
-    #
-    #     for i in range(len(given_points) - 1):
-    #         result.insert(2 * i + 1, midpoints[i])
-    #
-    #     return result
+    @staticmethod
+    def sequence(start, stop, step):
+        n = int(round((stop - start) / float(step)))
+        if n > 1:
+            return [start + step * i for i in range(n + 1)]
+        elif n == 1:
+            return [start]
+        else:
+            return []
 
     @staticmethod
     def __read_points(function, directory):
@@ -89,13 +87,13 @@ class IOHandler:
         points = self.__read_points('lagrange', directory)
 
         # calculate lagrange points
-        file = open(directory + "/lagrange_factors.txt", "r")
+        file = open(directory + '/lagrange_factors.txt', "r")
         for line in file:
             factors.append(float(line.strip()))
 
         file.close()
 
-        lagrange_x_points = [i / density for i in range(int(points['x'][0]), (int(points['x'][-1]) + 1) * density)]
+        lagrange_x_points = self.sequence(int(points['x'][0]), int(points['x'][-1]), 1 / density)
         lagrange_points = {
             'x': lagrange_x_points,
             'y': self.values_lagrange(lagrange_x_points, factors)
@@ -103,70 +101,69 @@ class IOHandler:
 
         return points, lagrange_points
 
-    def values_spline(self, x_interval, factors):
-        y = [factors[0]]
+    @staticmethod
+    def values_spline(x_0, x_i, factors):
+        h = x_i - x_0
 
-        for i in range(0, len(x_interval) - 1):
-            h = x_interval[i + 1] - x_interval[i]
-
-            value = 0
-            for j in range(0, len(factors)):
-                value += factors[j] * h ** (len(factors) - j - 1)
-
-            y.append(value)
+        y = 0
+        for j in range(0, len(factors)):
+            y += factors[j] * h ** (len(factors) - j - 1)
 
         return y
 
-    def read_spline(self, directory, density=10):
+    def read_spline(self, directory, mode, density=10):
         factors = []
 
         if density < 1:
             density = 1
 
         # read default points
-        points = self.__read_points('spline', directory)
+        points = self.__read_points(mode, directory)
 
         # calculate spline points
         current_factor = []
-        first_spline = True
+        i = 0
 
-        file = open(directory + "/spline_factors.txt", "r")
+        file = open(directory + '/' + mode + '_factors.txt', "r")
         for line in file:
-            value = line.strip()
+            if i >= 4:
+                current_factor.reverse()
+                factors.append(current_factor)
 
-            if value == ';':
-                if first_spline:
-                    factors.append(current_factor[:(len(current_factor) // 2)])
-                    first_spline = False
-
-                factors.append(current_factor[(len(current_factor) // 2):])
                 current_factor = []
+                i = 0
 
-            else:
-                current_factor.append(float(value))
+            current_factor.append(float(line.strip()))
+            i += 1
 
+        current_factor.reverse()
+        factors.append(current_factor)
         file.close()
 
         spline_points = {
-            'x': [i / density for i in range(int(points['x'][0]), (int(points['x'][-1]) + 1) * density)],
+            'x': self.sequence(int(points['x'][0]), int(points['x'][-1]), 1 / density),
             'y': []
         }
 
         i = 1
         while i < len(points['x']) - 1:
-            spline_points['y'].extend(
-                self.values_spline(
-                    [x for x in spline_points['x'] if points['x'][i - 1] <= x <= points['x'][i]],
-                    factors[i - 1]
+            for x_i in [x for x in spline_points['x'] if points['x'][i - 1] <= x <= points['x'][i]]:
+                spline_points['y'].append(
+                    self.values_spline(
+                        points['x'][i - 1],
+                        x_i,
+                        factors[i - 1]
+                    )
                 )
-            )
             i += 1
 
-        spline_points['y'].extend(
-            self.values_spline(
-                [x for x in spline_points['x'] if points['x'][-2] <= x],
-                factors[-1]
+        for x_i in [x for x in spline_points['x'] if points['x'][-2] < x]:
+            spline_points['y'].append(
+                self.values_spline(
+                    points['x'][-2],
+                    x_i,
+                    factors[-1]
+                )
             )
-        )
 
         return points, spline_points
