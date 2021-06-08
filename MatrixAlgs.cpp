@@ -238,7 +238,7 @@ Matrix1d MatrixAlgs::splineInterpolation(const PointArray& points)
         M.matrix[row + 1][i * 4 + 6] = -2.0l;
     }
 
-    const auto h = points.arr[points.getLength() - 2].x - points.arr[points.getLength() - 1].x;
+    const auto h = points.arr[points.getLength() - 1].x - points.arr[points.getLength() - 2].x;
     shift = (points.getLength() - 1) * 4 - 2;
     M.matrix[shift][2] = 2.0l;
     M.matrix[shift + 1][shift] = 2.0l;

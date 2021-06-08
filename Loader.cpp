@@ -38,6 +38,10 @@ Loader::Loader(std::string inputDirectory, std::string outputDirectory) {
 	this->inputDirectory = inputDirectory;
 	this->outputDirectory = outputDirectory;
 
+	if (!std::filesystem::is_directory(outputDirectory)) {
+		std::filesystem::create_directory(outputDirectory);
+	}
+
 	for (const auto& file : std::filesystem::directory_iterator(inputDirectory)) {
 		this->paths.push_back(this->getFilename(file.path().u8string()));
 	}

@@ -6,14 +6,18 @@
 int main() {
 	Loader loader = Loader("input", "output");
 
-	int limit, interval;
+	int limit, lagrangeInterval, splineInterval;
 	std::cout << "Lagrange interpolation max points (15 recommended): ";
 	std::cin >> limit;
 
+	std::cout << "Distance between points for interval lagrange: ";
+	std::cin >> lagrangeInterval;
+
 	std::cout << "Distance between points for interval spline: ";
-	std::cin >> interval;
+	std::cin >> splineInterval;
 
 	std::cout << std::endl;
+
 
 	for (const auto& path : loader.getPaths()) {
 		std::cout << "Processing " << path << "..." << std::endl;
@@ -26,13 +30,17 @@ int main() {
 		Matrix1d lagrangeMatrix = MatrixAlgs::lagrangeInterpolation(truncatedPoints);
 		Matrix1d splineMatrix = MatrixAlgs::splineInterpolation(truncatedPoints);
 
-		PointArray noMiddlePoints = points.removeMidpoints(interval);
-		Matrix1d intervalSplineMatrix = MatrixAlgs::splineInterpolation(noMiddlePoints);
+		PointArray noMiddlePointsLagrange = truncatedPoints.removeMidpoints(lagrangeInterval);
+		Matrix1d intervalLagrangeMatrix = MatrixAlgs::lagrangeInterpolation(noMiddlePointsLagrange);
+
+		PointArray noMiddlePointsSpline = points.removeMidpoints(splineInterval);
+		Matrix1d intervalSplineMatrix = MatrixAlgs::splineInterpolation(noMiddlePointsSpline);
 
 		loader.updateFunctionsDatabase(path);
 		loader.unload(truncatedPoints, lagrangeMatrix, "lagrange", path);
 		loader.unload(truncatedPoints, splineMatrix, "spline", path);
-		loader.unload(noMiddlePoints, intervalSplineMatrix, "interval_spline", path);
+		loader.unload(noMiddlePointsLagrange, intervalLagrangeMatrix, "interval_lagrange", path);
+		loader.unload(noMiddlePointsSpline, intervalSplineMatrix, "interval_spline", path);
 		loader.unload(points, fullSplineMatrix, "full_spline", path);
 	}
 	std::cout << "Done!" << std::endl;

@@ -48,13 +48,13 @@ class IOHandler:
             return []
 
     @staticmethod
-    def __read_points(function, directory):
+    def read_points(directory, function):
         points = {
             'x': [],
             'y': []
         }
 
-        file = open(directory + "/" + function + "_points.txt", "r")
+        file = open(directory + '/' + function + "_points.txt", "r")
         for line in file:
             line = line.split(' ')
 
@@ -77,17 +77,17 @@ class IOHandler:
 
         return y
 
-    def read_lagrange(self, directory, density=10):
+    def read_lagrange(self, directory, mode, density=10):
         factors = []
 
         if density < 1:
             density = 1
 
         # read default points
-        points = self.__read_points('lagrange', directory)
+        points = self.read_points(directory, mode)
 
         # calculate lagrange points
-        file = open(directory + '/lagrange_factors.txt', "r")
+        file = open(directory + '/' + mode + '_factors.txt', "r")
         for line in file:
             factors.append(float(line.strip()))
 
@@ -118,7 +118,7 @@ class IOHandler:
             density = 1
 
         # read default points
-        points = self.__read_points(mode, directory)
+        points = self.read_points(directory, mode)
 
         # calculate spline points
         current_factor = []
