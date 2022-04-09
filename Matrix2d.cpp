@@ -5,16 +5,19 @@ Matrix2d::Matrix2d(int n)
 	this->rows = n;
 	this->cols = n;
 
-	matrix = new long double* [n];
-	for (int i = 0; i < n; ++i) {
+	matrix = new long double*[n];
+	for (int i = 0; i < n; ++i)
+	{
 		matrix[i] = new long double[n];
 	}
 }
 
 Matrix2d::Matrix2d(const Matrix2d& M) : Matrix2d(M.cols)
 {
-	for (int i = 0; i < this->rows; ++i) {
-		for (int j = 0; j < this->cols; ++j) {
+	for (int i = 0; i < this->rows; ++i)
+	{
+		for (int j = 0; j < this->cols; ++j)
+		{
 			this->matrix[i][j] = M.matrix[i][j];
 		}
 	}
@@ -22,8 +25,10 @@ Matrix2d::Matrix2d(const Matrix2d& M) : Matrix2d(M.cols)
 
 void Matrix2d::fill(long double value)
 {
-	for (int i = 0; i < this->rows; ++i) {
-		for (int j = 0; j < this->cols; ++j) {
+	for (int i = 0; i < this->rows; ++i)
+	{
+		for (int j = 0; j < this->cols; ++j)
+		{
 			this->matrix[i][j] = value;
 		}
 	}
@@ -31,8 +36,10 @@ void Matrix2d::fill(long double value)
 
 bool Matrix2d::hasNullOnDiagonal() const
 {
-	for (int i = 0; i < this->cols; ++i) {
-		if (matrix[i][i] == 0) {
+	for (int i = 0; i < this->cols; ++i)
+	{
+		if (matrix[i][i] == 0)
+		{
 			return true;
 		}
 	}
@@ -42,9 +49,11 @@ bool Matrix2d::hasNullOnDiagonal() const
 
 Matrix2d Matrix2d::toIdentity() const
 {
-	Matrix2d I = Matrix2d(*this);
-	for (int i = 0; i < this->rows; ++i) {
-		for (int j = 0; j < this->cols; ++j) {
+	auto I = Matrix2d(*this);
+	for (int i = 0; i < this->rows; ++i)
+	{
+		for (int j = 0; j < this->cols; ++j)
+		{
 			I.matrix[i][j] = (i == j) ? 1 : 0;
 		}
 	}
@@ -55,9 +64,10 @@ Matrix2d Matrix2d::transpose()
 {
 	Matrix2d trM(*this);
 
-	for (int i = 0; i < this->cols; ++i) {
-		for (int j = 0; j < i; ++j) {
-			
+	for (int i = 0; i < this->cols; ++i)
+	{
+		for (int j = 0; j < i; ++j)
+		{
 			// swap algorithm
 			auto tmp = trM.matrix[i][j];
 			trM.matrix[i][j] = trM.matrix[j][i];
@@ -70,8 +80,9 @@ Matrix2d Matrix2d::transpose()
 
 Matrix1d Matrix2d::column(int index)
 {
-	Matrix1d M = Matrix1d(this->rows);
-	for (int i = 0; i < this->rows; ++i) {
+	auto M = Matrix1d(this->rows);
+	for (int i = 0; i < this->rows; ++i)
+	{
 		M.matrix[i] = this->matrix[i][index];
 	}
 
@@ -80,8 +91,9 @@ Matrix1d Matrix2d::column(int index)
 
 Matrix1d Matrix2d::row(int index)
 {
-	Matrix1d M = Matrix1d(this->cols);
-	for (int i = 0; i < this->cols; ++i) {
+	auto M = Matrix1d(this->cols);
+	for (int i = 0; i < this->cols; ++i)
+	{
 		M.matrix[i] = this->matrix[index][i];
 	}
 
@@ -90,7 +102,8 @@ Matrix1d Matrix2d::row(int index)
 
 void Matrix2d::swapColumns(int row1, int row2, int from, int to)
 {
-	for (int i = from; i < to; ++i) {
+	for (int i = from; i < to; ++i)
+	{
 		long double tmp = this->matrix[i][row1];
 		this->matrix[i][row1] = this->matrix[i][row2];
 		this->matrix[i][row2] = tmp;
@@ -99,7 +112,8 @@ void Matrix2d::swapColumns(int row1, int row2, int from, int to)
 
 void Matrix2d::swapRows(int col1, int col2, int from, int to)
 {
-	for (int i = from; i < to; ++i) {
+	for (int i = from; i < to; ++i)
+	{
 		long double tmp = this->matrix[col1][i];
 		this->matrix[col1][i] = this->matrix[col2][i];
 		this->matrix[col2][i] = tmp;
@@ -108,21 +122,25 @@ void Matrix2d::swapRows(int col1, int col2, int from, int to)
 
 Matrix2d Matrix2d::operator=(const Matrix2d& M)
 {
-	for (int i = 0; i < this->rows; ++i) {
+	for (int i = 0; i < this->rows; ++i)
+	{
 		delete[] matrix[i];
 	}
 	delete[] matrix;
 
 	this->rows = M.rows;
 	this->cols = M.cols;
-	matrix = new long double* [M.rows];
+	matrix = new long double*[M.rows];
 
-	for (int i = 0; i < M.rows; ++i) {
+	for (int i = 0; i < M.rows; ++i)
+	{
 		matrix[i] = new long double[M.cols];
 	}
 
-	for (int i = 0; i < this->rows; ++i) {
-		for (int j = 0; j < this->cols; ++j) {
+	for (int i = 0; i < this->rows; ++i)
+	{
+		for (int j = 0; j < this->cols; ++j)
+		{
 			this->matrix[i][j] = M.matrix[i][j];
 		}
 	}
@@ -131,11 +149,13 @@ Matrix2d Matrix2d::operator=(const Matrix2d& M)
 
 Matrix1d Matrix2d::operator*(const Matrix1d& M) const
 {
-	Matrix1d R = Matrix1d(M);
-	for (int i = 0; i < this->rows; ++i) {
+	auto R = Matrix1d(M);
+	for (int i = 0; i < this->rows; ++i)
+	{
 		R.matrix[i] = 0;
 
-		for (int j = 0; j < this->cols; ++j) {
+		for (int j = 0; j < this->cols; ++j)
+		{
 			R.matrix[i] += this->matrix[i][j] * M.matrix[j];
 		}
 	}
@@ -145,7 +165,8 @@ Matrix1d Matrix2d::operator*(const Matrix1d& M) const
 
 Matrix2d::~Matrix2d()
 {
-	for (int i = 0; i < this->rows; ++i) {
+	for (int i = 0; i < this->rows; ++i)
+	{
 		delete[] matrix[i];
 	}
 	delete[] matrix;

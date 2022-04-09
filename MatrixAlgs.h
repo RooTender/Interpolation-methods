@@ -14,4 +14,3 @@ namespace MatrixAlgs
 	Matrix1d lagrangeInterpolation(const PointArray& points);
 	Matrix1d splineInterpolation(const PointArray& points);
 };
-

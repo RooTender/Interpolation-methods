@@ -8,7 +8,8 @@ PointArray::PointArray(int n)
 
 PointArray::PointArray(const PointArray& pointArray) : PointArray(pointArray.getLength())
 {
-	for (int i = 0; i < this->length; ++i) {
+	for (int i = 0; i < this->length; ++i)
+	{
 		this->arr[i] = pointArray.arr[i];
 	}
 }
@@ -25,8 +26,9 @@ int PointArray::getLength() const
 
 PointArray PointArray::trunc(int begin, int end)
 {
-	PointArray truncatedArray = PointArray(end - begin);
-	for (int i = begin; i < end; ++i) {
+	auto truncatedArray = PointArray(end - begin);
+	for (int i = begin; i < end; ++i)
+	{
 		truncatedArray.arr[i - begin] = this->arr[i];
 	}
 
@@ -36,10 +38,11 @@ PointArray PointArray::trunc(int begin, int end)
 PointArray PointArray::removeMidpoints(int amount)
 {
 	++amount;
-	PointArray noMidpoints = PointArray(this->length / amount + 1);
+	auto noMidpoints = PointArray(this->length / amount + 1);
 
 	int iterator = 0;
-	for (int i = 0; i <= this->length / 2; i += amount) {
+	for (int i = 0; i <= this->length / 2; i += amount)
+	{
 		noMidpoints.arr[iterator] = this->arr[i];
 		noMidpoints.arr[noMidpoints.getLength() - 1 - iterator++] = this->arr[this->length - 1 - i];
 	}

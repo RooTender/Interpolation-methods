@@ -21,8 +21,8 @@ public:
 	void swapColumns(int row1, int row2, int from, int to);
 	void swapRows(int col1, int col2, int from, int to);
 
-	Matrix2d operator= (const Matrix2d& M);
-	Matrix1d operator* (const Matrix1d& M) const;
+	Matrix2d operator=(const Matrix2d& M);
+	Matrix1d operator*(const Matrix1d& M) const;
 
 	~Matrix2d();
 };

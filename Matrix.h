@@ -4,7 +4,9 @@
 class Matrix
 {
 protected:
-	Matrix() {};
+	Matrix()
+	{
+	};
 
 public:
 	int rows = 0;
@@ -14,4 +16,3 @@ public:
 	virtual int size() const;
 	virtual void fill(long double value) = 0;
 };
-

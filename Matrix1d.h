@@ -16,8 +16,8 @@ public:
 	Matrix1d abs();
 	Matrix1d trunc(int from, int to);
 
-	Matrix1d operator= (const Matrix1d& M);
-	Matrix1d operator- (const Matrix1d& M) const;
+	Matrix1d operator=(const Matrix1d& M);
+	Matrix1d operator-(const Matrix1d& M) const;
 
 	~Matrix1d();
 };

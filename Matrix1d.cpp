@@ -10,39 +10,44 @@ Matrix1d::Matrix1d(int n)
 
 Matrix1d::Matrix1d(const Matrix1d& M) : Matrix1d(M.size())
 {
-	for (int i = 0; i < this->size(); ++i) {
+	for (int i = 0; i < this->size(); ++i)
+	{
 		this->matrix[i] = M.matrix[i];
 	}
 }
 
 Matrix1d::Matrix1d(long double* arr, int n) : Matrix1d(n)
 {
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < n; ++i)
+	{
 		matrix[i] = arr[i];
 	}
 }
 
 void Matrix1d::fill(long double value)
 {
-	for (int i = 0; i < this->cols; ++i) {
+	for (int i = 0; i < this->cols; ++i)
+	{
 		this->matrix[i] = value;
 	}
 }
 
 Matrix1d Matrix1d::abs()
 {
-	Matrix1d M = Matrix1d(*this);
-	for (int i = 0; i < this->cols; ++i) {
+	auto M = Matrix1d(*this);
+	for (int i = 0; i < this->cols; ++i)
+	{
 		M.matrix[i] = fabsl(M.matrix[i]);
 	}
-	
+
 	return Matrix1d(M);
 }
 
 Matrix1d Matrix1d::trunc(int from, int to)
 {
-	Matrix1d M = Matrix1d(to - from);
-	for (int i = from; i < to; ++i) {
+	auto M = Matrix1d(to - from);
+	for (int i = from; i < to; ++i)
+	{
 		M.matrix[i - from] = this->matrix[i];
 	}
 
@@ -57,8 +62,10 @@ Matrix1d Matrix1d::trunc(int from, int to)
 int Matrix1d::indexOf_max()
 {
 	int index = 0;
-	for (int i = 1; i < this->cols; ++i) {
-		if (this->matrix[i] > this->matrix[index]) {
+	for (int i = 1; i < this->cols; ++i)
+	{
+		if (this->matrix[i] > this->matrix[index])
+		{
 			index = i;
 		}
 	}
@@ -74,7 +81,8 @@ Matrix1d Matrix1d::operator=(const Matrix1d& M)
 	this->cols = M.cols;
 	this->matrix = new long double[M.size()];
 
-	for (int i = 0; i < this->size(); ++i) {
+	for (int i = 0; i < this->size(); ++i)
+	{
 		this->matrix[i] = M.matrix[i];
 	}
 	return *this;
@@ -82,8 +90,9 @@ Matrix1d Matrix1d::operator=(const Matrix1d& M)
 
 Matrix1d Matrix1d::operator-(const Matrix1d& M) const
 {
-	Matrix1d R = Matrix1d(*this);
-	for (int i = 0; i < this->size(); ++i) {
+	auto R = Matrix1d(*this);
+	for (int i = 0; i < this->size(); ++i)
+	{
 		R.matrix[i] = this->matrix[i] - M.matrix[i];
 	}
 
