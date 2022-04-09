@@ -3,7 +3,7 @@
 long double MatrixAlgs::norm(const Matrix1d& res)
 {
 	long double result = 0;
-	for (int i = 0; i < res.size(); ++i)
+	for (int i = 0; i < res.Size(); ++i)
 	{
 		result += res.matrix[i] * res.matrix[i];
 	}
@@ -14,7 +14,7 @@ long double MatrixAlgs::norm(const Matrix1d& res)
 long double MatrixAlgs::jacobi(const Matrix2d& A, Matrix1d& x, const Matrix1d& b, long double limit, int& iterations)
 {
 	iterations = 0;
-	int upperLimit = b.size();
+	int upperLimit = b.Size();
 
 	long double mNorm = 0;
 
@@ -46,7 +46,7 @@ long double MatrixAlgs::gaussSeidl(const Matrix2d& A, Matrix1d& x, const Matrix1
                                    int& iterations)
 {
 	iterations = 0;
-	int upperLimit = b.size();
+	int upperLimit = b.Size();
 
 	long double mNorm = 0;
 
@@ -156,12 +156,12 @@ long double MatrixAlgs::LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d
 
 Matrix1d MatrixAlgs::multiplyPolynomials(const Matrix1d& A, const Matrix1d& B)
 {
-	auto M = Matrix1d(A.size() + B.size() - 1);
-	M.fill(0);
+	auto M = Matrix1d(A.Size() + B.Size() - 1);
+	M.Fill(0);
 
-	for (int i = 0; i < A.size(); ++i)
+	for (int i = 0; i < A.Size(); ++i)
 	{
-		for (int j = 0; j < B.size(); ++j)
+		for (int j = 0; j < B.Size(); ++j)
 		{
 			M.matrix[i + j] += A.matrix[i] * B.matrix[j];
 		}
@@ -199,7 +199,7 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(const PointArray& points)
 				);
 			}
 
-			for (int k = 0; k < (*polynomial).size(); ++k)
+			for (int k = 0; k < (*polynomial).Size(); ++k)
 			{
 				(*polynomial).matrix[k] /= points.arr[i].x - points.arr[j].x;
 			}
@@ -214,11 +214,11 @@ Matrix1d MatrixAlgs::lagrangeInterpolation(const PointArray& points)
 	}
 
 	auto result = Matrix1d(points.getLength());
-	result.fill(0);
+	result.Fill(0);
 
 	for (int i = 0; i < points.getLength(); ++i)
 	{
-		for (int j = 0; j < lagrangeBase[i]->size(); ++j)
+		for (int j = 0; j < lagrangeBase[i]->Size(); ++j)
 		{
 			result.matrix[j] += lagrangeBase[i]->matrix[j] * points.arr[i].y;
 		}
@@ -233,8 +233,8 @@ Matrix1d MatrixAlgs::splineInterpolation(const PointArray& points)
 	auto x = Matrix1d(M.rows);
 	auto y = Matrix1d(M.rows);
 
-	M.fill(0);
-	y.fill(0);
+	M.Fill(0);
+	y.Fill(0);
 
 	auto shift = points.getLength() - 1;
 	for (int i = 0; i < points.getLength() - 1; ++i)

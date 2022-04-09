@@ -23,7 +23,7 @@ Matrix2d::Matrix2d(const Matrix2d& M) : Matrix2d(M.cols)
 	}
 }
 
-void Matrix2d::fill(long double value)
+void Matrix2d::Fill(long double value)
 {
 	for (int i = 0; i < this->rows; ++i)
 	{

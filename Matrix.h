@@ -1,18 +1,21 @@
 #pragma once
-#include <math.h>
 
 class Matrix
 {
 protected:
-	Matrix()
-	{
-	};
+	Matrix() = default;
+	~Matrix() = default;
 
 public:
 	int rows = 0;
 	int cols = 0;
 
-	virtual int size();
-	virtual int size() const;
-	virtual void fill(long double value) = 0;
+	Matrix(const Matrix&) = delete;
+	Matrix& operator=(Matrix&&) = default;
+	Matrix& operator=(const Matrix& other) = default;
+	Matrix(Matrix&&) = delete;
+
+	virtual int Size();
+	[[nodiscard]] virtual int Size() const;
+	virtual void Fill(long double value) = 0;
 };

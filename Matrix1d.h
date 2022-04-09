@@ -10,7 +10,7 @@ public:
 	Matrix1d(const Matrix1d& M);
 	Matrix1d(long double* arr, int n);
 
-	void fill(long double value) override;
+	void Fill(long double value) override;
 
 	int indexOf_max();
 	Matrix1d abs();

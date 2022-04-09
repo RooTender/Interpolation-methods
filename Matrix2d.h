@@ -10,7 +10,7 @@ public:
 	Matrix2d(int n);
 	Matrix2d(const Matrix2d& M);
 
-	void fill(long double value) override;
+	void Fill(long double value) override;
 
 	bool hasNullOnDiagonal() const;
 	Matrix2d toIdentity() const;

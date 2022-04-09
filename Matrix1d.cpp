@@ -1,5 +1,7 @@
 #include "Matrix1d.h"
 
+#include <corecrt_math.h>
+
 Matrix1d::Matrix1d(int n)
 {
 	this->rows = 1;
@@ -8,9 +10,9 @@ Matrix1d::Matrix1d(int n)
 	matrix = new long double[n];
 }
 
-Matrix1d::Matrix1d(const Matrix1d& M) : Matrix1d(M.size())
+Matrix1d::Matrix1d(const Matrix1d& M) : Matrix1d(M.Size())
 {
-	for (int i = 0; i < this->size(); ++i)
+	for (int i = 0; i < this->Size(); ++i)
 	{
 		this->matrix[i] = M.matrix[i];
 	}
@@ -24,7 +26,7 @@ Matrix1d::Matrix1d(long double* arr, int n) : Matrix1d(n)
 	}
 }
 
-void Matrix1d::fill(long double value)
+void Matrix1d::Fill(long double value)
 {
 	for (int i = 0; i < this->cols; ++i)
 	{
@@ -79,9 +81,9 @@ Matrix1d Matrix1d::operator=(const Matrix1d& M)
 
 	this->rows = M.rows;
 	this->cols = M.cols;
-	this->matrix = new long double[M.size()];
+	this->matrix = new long double[M.Size()];
 
-	for (int i = 0; i < this->size(); ++i)
+	for (int i = 0; i < this->Size(); ++i)
 	{
 		this->matrix[i] = M.matrix[i];
 	}
@@ -91,7 +93,7 @@ Matrix1d Matrix1d::operator=(const Matrix1d& M)
 Matrix1d Matrix1d::operator-(const Matrix1d& M) const
 {
 	auto R = Matrix1d(*this);
-	for (int i = 0; i < this->size(); ++i)
+	for (int i = 0; i < this->Size(); ++i)
 	{
 		R.matrix[i] = this->matrix[i] - M.matrix[i];
 	}

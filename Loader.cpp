@@ -104,7 +104,7 @@ void Loader::Unload(const PointArray& points, const Matrix1d& factors, const std
 		std::ofstream::out
 	);
 
-	for (int i = 0; i < factors.size(); ++i)
+	for (int i = 0; i < factors.Size(); ++i)
 	{
 		ofs << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << std::scientific
 			<< factors.matrix[i] << '\n';
