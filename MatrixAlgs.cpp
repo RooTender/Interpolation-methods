@@ -83,7 +83,7 @@ long double MatrixAlgs::LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d
 
 		for (int i = 0; i < A.rows - 1; ++i)
 		{
-			auto pivotIndex = U.column(i).trunc(i, U.rows).abs().indexOf_max();
+			auto pivotIndex = U.column(i).Trunc(i, U.rows).Abs().IndexOfMax();
 			pivotIndex = pivotIndex + i;
 
 			U.swapRows(i, pivotIndex, i, U.cols);
