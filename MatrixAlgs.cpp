@@ -73,22 +73,22 @@ long double MatrixAlgs::gaussSeidl(const Matrix2d& A, Matrix1d& x, const Matrix1
 
 long double MatrixAlgs::LUDecomposition(const Matrix2d& A, Matrix1d& x, Matrix1d b)
 {
-	auto L = Matrix2d(A.toIdentity());
+	auto L = Matrix2d(A.ToIdentity());
 	auto U = Matrix2d(A);
 
-	if (A.hasNullOnDiagonal())
+	if (A.HasNullOnDiagonal())
 	{
 		// Do the pivoting
 		auto P = Matrix2d(L);
 
 		for (int i = 0; i < A.rows - 1; ++i)
 		{
-			auto pivotIndex = U.column(i).Trunc(i, U.rows).Abs().IndexOfMax();
+			auto pivotIndex = U.Column(i).Trunc(i, U.rows).Abs().IndexOfMax();
 			pivotIndex = pivotIndex + i;
 
-			U.swapRows(i, pivotIndex, i, U.cols);
-			L.swapRows(i, pivotIndex, 0, i);
-			P.swapRows(i, pivotIndex, 0, P.cols);
+			U.SwapRows(i, pivotIndex, i, U.cols);
+			L.SwapRows(i, pivotIndex, 0, i);
+			P.SwapRows(i, pivotIndex, 0, P.cols);
 
 			// LU decomposition
 			for (int j = i + 1; j < A.cols; ++j)
