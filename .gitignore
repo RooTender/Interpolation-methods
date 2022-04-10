@@ -3,3 +3,17 @@
 *.vcxproj
 *.filters
 *.user
+Debug/Projekt3_MN.tlog
+*.obj
+Debug/vc142.pdb
+*.log
+*.pdb
+*.exe*
+*.ilk
+*.idb
+Debug/Projekt3_MN.vcxproj.FileListAbsolute.txt
+Chart Generator/venv
+Chart Generator/.idea
+output
+Chart Generator/IOHandler/__pycache__
+Debug
