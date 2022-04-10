@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <corecrt_math.h>
 
-Matrix1d::Matrix1d(const int n) : matrix(new long double[n])
+Matrix1d::Matrix1d(const size_t n) : matrix(new long double[n])
 {
 	this->rows = 1;
 	this->cols = n;
@@ -11,15 +11,15 @@ Matrix1d::Matrix1d(const int n) : matrix(new long double[n])
 
 Matrix1d::Matrix1d(const Matrix1d& matrix) : Matrix1d(matrix.Size())
 {
-	for (int i = 0; i < this->Matrix::Size(); ++i)
+	for (size_t i = 0; i < this->Matrix::Size(); ++i)
 	{
 		this->matrix[i] = matrix.matrix[i];
 	}
 }
 
-Matrix1d::Matrix1d(const long double* arr, const int n) : Matrix1d(n)
+Matrix1d::Matrix1d(const long double* arr, const size_t n) : Matrix1d(n)
 {
-	for (int i = 0; i < n; ++i)
+	for (size_t i = 0; i < n; ++i)
 	{
 		matrix[i] = arr[i];
 	}
@@ -27,7 +27,7 @@ Matrix1d::Matrix1d(const long double* arr, const int n) : Matrix1d(n)
 
 void Matrix1d::Fill(const long double value)
 {
-	for (int i = 0; i < this->cols; ++i)
+	for (size_t i = 0; i < this->cols; ++i)
 	{
 		this->matrix[i] = value;
 	}
@@ -36,7 +36,7 @@ void Matrix1d::Fill(const long double value)
 Matrix1d Matrix1d::Abs() const
 {
 	const auto matrix1d = Matrix1d(*this);
-	for (int i = 0; i < this->cols; ++i)
+	for (size_t i = 0; i < this->cols; ++i)
 	{
 		matrix1d.matrix[i] = fabsl(matrix1d.matrix[i]);
 	}
@@ -44,10 +44,10 @@ Matrix1d Matrix1d::Abs() const
 	return Matrix1d{matrix1d};
 }
 
-Matrix1d Matrix1d::Trunc(const int from, const int to) const
+Matrix1d Matrix1d::Trunc(const unsigned from, const unsigned to) const
 {
 	const auto matrix1d = Matrix1d(to - from);
-	for (int i = from; i < to; ++i)
+	for (size_t i = from; i < to; ++i)
 	{
 		matrix1d.matrix[i - from] = this->matrix[i];
 	}
@@ -60,10 +60,10 @@ Matrix1d Matrix1d::Trunc(const int from, const int to) const
  *
  * @return index of maximum value in matrix.
  */
-int Matrix1d::IndexOfMax() const
+unsigned Matrix1d::IndexOfMax() const
 {
-	int index = 0;
-	for (int i = 1; i < this->cols; ++i)
+	unsigned index = 0;
+	for (size_t i = 1; i < this->cols; ++i)
 	{
 		if (this->matrix[i] > this->matrix[index])
 		{
@@ -92,21 +92,21 @@ Matrix1d& Matrix1d::operator=(const Matrix1d& matrix)
 	return *this;
 }
 
-Matrix1d& Matrix1d::operator=(Matrix1d&& matrix) noexcept
+Matrix1d& Matrix1d::operator=(Matrix1d&& matrix1d) noexcept
 {
-	std::swap(this->cols, matrix.cols);
-	std::swap(this->rows, matrix.rows);
-	std::swap(this->matrix, matrix.matrix);
+	std::swap(this->cols, matrix1d.cols);
+	std::swap(this->rows, matrix1d.rows);
+	std::swap(this->matrix, matrix1d.matrix);
 
 	return *this;
 }
 
-Matrix1d Matrix1d::operator-(const Matrix1d& matrix) const
+Matrix1d Matrix1d::operator-(const Matrix1d& matrix1d) const
 {
 	const auto result = Matrix1d(*this);
-	for (int i = 0; i < this->Size(); ++i)
+	for (size_t i = 0; i < this->Size(); ++i)
 	{
-		result.matrix[i] = this->matrix[i] - matrix.matrix[i];
+		result.matrix[i] = this->matrix[i] - matrix1d.matrix[i];
 	}
 
 	return Matrix1d{result};

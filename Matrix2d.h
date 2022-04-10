@@ -7,7 +7,7 @@ class Matrix2d final : public Matrix
 public:
 	long double** matrix;
 
-	explicit Matrix2d(int n);
+	explicit Matrix2d(size_t n);
 	Matrix2d(const Matrix2d& matrix);
 	Matrix2d(Matrix2d&& matrix2d) noexcept;
 
@@ -16,11 +16,11 @@ public:
 	[[nodiscard]] bool HasNullOnDiagonal() const;
 	[[nodiscard]] Matrix2d ToIdentity() const;
 	[[nodiscard]] Matrix2d Transpose() const;
-	[[nodiscard]] Matrix1d Column(int index) const;
-	[[nodiscard]] Matrix1d Row(int index) const;
+	[[nodiscard]] Matrix1d Column(unsigned index) const;
+	[[nodiscard]] Matrix1d Row(unsigned index) const;
 
-	void SwapColumns(int row1, int row2, int from, int to) const;
-	void SwapRows(int col1, int col2, int from, int to) const;
+	void SwapColumns(unsigned row1, unsigned row2, unsigned from, unsigned to) const;
+	void SwapRows(unsigned col1, unsigned col2, unsigned from, unsigned to) const;
 
 	Matrix2d& operator=(const Matrix2d& matrix2d);
 	Matrix2d& operator=(Matrix2d&& matrix2d) noexcept;

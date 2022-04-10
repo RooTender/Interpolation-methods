@@ -3,18 +3,20 @@
 
 class PointArray
 {
-private:
-	int length;
+	size_t length;
 
 public:
 	Point* arr;
 
-	PointArray(int n);
+	explicit PointArray(size_t n);
 	PointArray(const PointArray& pointArray);
+	PointArray(PointArray&& pointArray) noexcept;
+	PointArray& operator=(const PointArray& pointArray);
+	PointArray& operator=(PointArray&& pointArray) noexcept;
 
-	int getLength() const;
-	PointArray trunc(int begin, int end);
-	PointArray removeMidpoints(int amount);
+	[[nodiscard]] size_t GetAmount() const;
+	[[nodiscard]] PointArray Trunc(unsigned begin, unsigned end) const;
+	[[nodiscard]] PointArray RemoveMidpoints(unsigned amount) const;
 
 	~PointArray();
 };
