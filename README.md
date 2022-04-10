@@ -17,6 +17,7 @@ A function made of fragments of the polynomials that are glued together. It is a
 
 ## Example
 ### Lagrange interpolation
+*Here you can see the Runge's phenomenon at the extremes.*
 ![Lagrange_interpolation_full](./Lagrange_full.png)
 ![Lagrange_interpolation_nodes](./Lagrange_nodes.png)
 
