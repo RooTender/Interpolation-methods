@@ -1,28 +1,25 @@
 #pragma once
 #include <filesystem>
-#include <fstream>
 #include <vector>
 #include <string>
-#include <iomanip>
 #include "PointArray.h"
 #include "Matrix1d.h"
 
 class Loader
 {
-private:
 	std::vector<std::string> paths;
 	std::string inputDirectory, outputDirectory;
 
-	std::string getFilename(std::string path);
-	std::string getRawFilename(std::string filename);
+	static std::string GetFilename(std::string path);
+	static std::string GetRawFilename(std::string filename);
 
 public:
-	Loader(std::string inputDirectory, std::string outputDirectory);
+	Loader(const std::string& inputDirectory, const std::string& outputDirectory);
 
-	PointArray load(std::string filename);
-	std::vector<std::string> getPaths();
+	[[nodiscard]] PointArray Load(const std::string& filename) const;
+	std::vector<std::string> GetPaths();
 
-	void updateFunctionsDatabase(const std::string filename);
-	void unload(const PointArray& points, const Matrix1d& factors, const std::string prefix, const std::string filename);
+	void UpdateFunctionsDatabase(const std::string& filename) const;
+	void Unload(const PointArray& points, const Matrix1d& factors, const std::string& prefix, const std::string&
+	            filename) const;
 };
-

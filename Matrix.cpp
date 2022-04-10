@@ -1,10 +1,11 @@
 #include "Matrix.h"
-int Matrix::size()
+
+size_t Matrix::Size()
 {
 	return this->cols * this->rows;
 }
 
-int Matrix::size() const
+size_t Matrix::Size() const
 {
 	return this->cols * this->rows;
 }
