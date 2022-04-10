@@ -7,7 +7,6 @@
 
 class Loader
 {
-private:
 	std::vector<std::string> paths;
 	std::string inputDirectory, outputDirectory;
 

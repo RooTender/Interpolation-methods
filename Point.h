@@ -1,15 +1,10 @@
 #pragma once
 struct Point
 {
-	Point()
-	{
-	}
-
-	Point(long double x, long double y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-
 	long double x = 0, y = 0;
+
+	Point() = default;
+	Point(const long double x, const long double y) : x(x), y(y)
+	{
+	}
 };

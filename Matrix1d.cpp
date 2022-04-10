@@ -74,20 +74,20 @@ unsigned Matrix1d::IndexOfMax() const
 	return index;
 }
 
-Matrix1d& Matrix1d::operator=(const Matrix1d& matrix)
+Matrix1d& Matrix1d::operator=(const Matrix1d& matrix1d)
 {
-	if (this == &matrix)
+	if (this == &matrix1d)
 	{
 		return *this;
 	}
 
 	delete[] this->matrix;
 
-	this->rows = matrix.rows;
-	this->cols = matrix.cols;
-	this->matrix = new long double[matrix.Size()];
+	this->rows = matrix1d.rows;
+	this->cols = matrix1d.cols;
+	this->matrix = new long double[matrix1d.Size()];
 
-	std::copy_n(matrix.matrix, matrix.Size(), this->matrix);
+	std::copy_n(matrix1d.matrix, matrix1d.Size(), this->matrix);
 	
 	return *this;
 }

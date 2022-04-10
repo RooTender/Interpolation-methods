@@ -14,12 +14,11 @@ long double MatrixAlgorithms::Norm(const Matrix1d& res)
 	return sqrtl(result);
 }
 
-long double MatrixAlgorithms::Jacobi(const Matrix2d& a, Matrix1d& x, const Matrix1d& b, long double limit, int& iterations)
+long double MatrixAlgorithms::Jacobi(const Matrix2d& a, Matrix1d& x, const Matrix1d& b, const long double limit, unsigned& iterations)
 {
 	iterations = 0;
-	const int upperLimit = b.Size();
-
-	long double mNorm = 0;
+	const unsigned upperLimit = b.Size();
+	long double mNorm;
 
 	do
 	{
@@ -49,10 +48,10 @@ long double MatrixAlgorithms::Jacobi(const Matrix2d& a, Matrix1d& x, const Matri
 }
 
 long double MatrixAlgorithms::GaussSeidl(const Matrix2d& a, Matrix1d& x, const Matrix1d& b, long double limit,
-                                   int& iterations)
+                                         unsigned& iterations)
 {
 	iterations = 0;
-	const int upperLimit = b.Size();
+	const size_t upperLimit = b.Size();
 
 	long double mNorm;
 
