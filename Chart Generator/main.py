@@ -40,6 +40,10 @@ def update_interpolation_data(interpolation_data, original_points, interpolation
 def rmsd(original_nodes, function):
     result = 0
 
+    if len(original_nodes) == 1:
+        index = function['x'].index(min(function['x'], key=lambda x_i: abs(x_i - node)))
+        return function['y'][index] - original_nodes['y'][0]
+
     for i, node in enumerate(original_nodes['x']):
         index = function['x'].index(min(function['x'], key=lambda x_i: abs(x_i - node)))
         result += (function['y'][index] - original_nodes['y'][i]) ** 2

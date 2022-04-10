@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Loader.h"
-#include "MatrixAlgs.h"
+#include "MatrixAlgorithms.h"
 
 
 int main()
@@ -14,6 +14,11 @@ int main()
 	std::cout << "Distance between points for interval lagrange: ";
 	std::cin >> lagrangeInterval;
 
+	if (limit < lagrangeInterval)
+	{
+		throw std::runtime_error("Distance cannot be greater than maximum!");
+	}
+
 	std::cout << "Distance between points for interval spline: ";
 	std::cin >> splineInterval;
 
@@ -25,18 +30,18 @@ int main()
 		std::cout << "Processing " << path << "..." << std::endl;
 
 		PointArray points = loader.Load(path);
-		Matrix1d fullSplineMatrix = MatrixAlgs::splineInterpolation(points);
+		Matrix1d fullSplineMatrix = MatrixAlgorithms::SplineInterpolation(points);
 
 		// Truncated array for optimal results (avoiding factors underflow)
-		PointArray truncatedPoints = points.trunc(0, limit);
-		Matrix1d lagrangeMatrix = MatrixAlgs::lagrangeInterpolation(truncatedPoints);
-		Matrix1d splineMatrix = MatrixAlgs::splineInterpolation(truncatedPoints);
+		PointArray truncatedPoints = points.Trunc(0, limit);
+		Matrix1d lagrangeMatrix = MatrixAlgorithms::LagrangeInterpolation(truncatedPoints);
+		Matrix1d splineMatrix = MatrixAlgorithms::SplineInterpolation(truncatedPoints);
 
-		PointArray noMiddlePointsLagrange = truncatedPoints.removeMidpoints(lagrangeInterval);
-		Matrix1d intervalLagrangeMatrix = MatrixAlgs::lagrangeInterpolation(noMiddlePointsLagrange);
+		PointArray noMiddlePointsLagrange = truncatedPoints.RemoveMidpoints(lagrangeInterval);
+		Matrix1d intervalLagrangeMatrix = MatrixAlgorithms::LagrangeInterpolation(noMiddlePointsLagrange);
 
-		PointArray noMiddlePointsSpline = points.removeMidpoints(splineInterval);
-		Matrix1d intervalSplineMatrix = MatrixAlgs::splineInterpolation(noMiddlePointsSpline);
+		PointArray noMiddlePointsSpline = points.RemoveMidpoints(splineInterval);
+		Matrix1d intervalSplineMatrix = MatrixAlgorithms::SplineInterpolation(noMiddlePointsSpline);
 
 		loader.UpdateFunctionsDatabase(path);
 		loader.Unload(truncatedPoints, lagrangeMatrix, "lagrange", path);
